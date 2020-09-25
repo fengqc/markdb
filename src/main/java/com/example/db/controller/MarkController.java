@@ -86,7 +86,9 @@ public class MarkController {
         DataSource dataSource = new HikariDataSource(hikariConfig);
         EngineFileType type = null;
 
-        String path = fileOutputDir + "\\" + DbConstant.FILE_NAME;
+        String name = DbConstant.FILE_NAME + System.currentTimeMillis();
+
+        String path = fileOutputDir + "\\" + name;
 
         if ("html".equals(dbConfig.getFileType())) {
             type = EngineFileType.HTML;
@@ -111,7 +113,7 @@ public class MarkController {
                 .fileType(type)
                 // 生成模板实现
                 .produceType(EngineTemplateType.freemarker)
-                .fileName(DbConstant.FILE_NAME)
+                .fileName(name)
                 .build();
 
         //配置
@@ -166,8 +168,10 @@ public class MarkController {
         InputStream inputStream = null;
         ServletOutputStream servletOutputStream = null;
         try {
+
             String fileName = path.trim().substring(path.trim().lastIndexOf("\\")+1);
 
+            path = path.trim().replace('\\', '/');
             if (!"".equals(path)) {
                 File file = new File(path);
                 inputStream = new FileInputStream(file);
